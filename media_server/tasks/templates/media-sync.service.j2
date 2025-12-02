@@ -1,0 +1,8 @@
+[Unit]
+Description=Sync media from central NAS
+Wants=media-sync.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/sync_from_nas.sh
+

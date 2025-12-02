@@ -1,0 +1,74 @@
+---
+- name: Install required packages
+  apt:
+    name:
+      - docker.io
+      - docker-compose-plugin
+      - rsync
+      - cifs-utils
+    state: present
+    update_cache: yes
+
+- name: Ensure directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ media_local_path }}"
+    - "{{ media_mount_path }}"
+
+- name: Install SMB credentials
+  template:
+    src: smb-credentials.j2
+    dest: /root/.smbcred
+    owner: root
+    mode: "0600"
+
+- name: Configure fstab SMB mount
+  template:
+    src: fstab-smb.j2
+    dest: /etc/fstab
+    owner: root
+    mode: "0644"
+
+- name: Mount SMB share
+  command: mount -a
+
+- name: Deploy sync script
+  template:
+    src: sync_from_nas.sh.j2
+    dest: /usr/local/bin/sync_from_nas.sh
+    mode: "0755"
+
+- name: Install docker-compose
+  template:
+    src: docker-compose.yml.j2
+    dest: /srv/docker-compose.yml
+
+- name: Pull and start docker stack
+  command: docker compose -f /srv/docker-compose.yml up -d
+
+# ───────────────────────────────
+# Choose between cron OR systemd
+# ───────────────────────────────
+
+- name: Deploy systemd sync service
+  template:
+    src: media-sync.service.j2
+    dest: /etc/systemd/system/media-sync.service
+  when: run_sync_as_service
+
+- name: Deploy systemd sync timer
+  template:
+    src: media-sync.timer.j2
+    dest: /etc/systemd/system/media-sync.timer
+  when: run_sync_as_service
+
+- name: Enable timer
+  systemd:
+    name: media-sync.timer
+    enabled: yes
+    state: started
+  when: run_sync_as_service
+

@@ -1,0 +1,27 @@
+services:
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - "{{ media_local_path }}:/media"
+      - /srv/plex/config:/config
+    restart: unless-stopped
+
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - "{{ media_local_path }}:/media"
+      - /srv/jellyfin/config:/config
+    restart: unless-stopped
+

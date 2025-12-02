@@ -1,0 +1,6 @@
+---
+- hosts: media_servers
+  become: yes
+  roles:
+    - media_server
+

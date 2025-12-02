@@ -1,0 +1,10 @@
+[Unit]
+Description=Nightly media sync
+
+[Timer]
+OnCalendar=*-*-* {{ sync_time }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

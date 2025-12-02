@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rsync -avh --delete --inplace --partial \
+    {{ media_mount_path }}/ {{ media_local_path }}/ >> /var/log/media_sync.log 2>&1
+
