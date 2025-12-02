@@ -1,0 +1,19 @@
+# SMB credentials
+*.smbcred
+/root/.smbcred
+
+# Ansible vaults
+group_vars/*_vault.yml
+
+# Logs
+*.log
+/var/log/
+
+# Docker
+**/docker-compose.override.yml
+**/docker-compose.override.yml~
+
+# OS files
+.DS_Store
+Thumbs.db
+
