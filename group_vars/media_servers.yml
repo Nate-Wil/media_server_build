@@ -7,5 +7,5 @@ media_local_path: "/srv/media"
 media_mount_path: "/mnt/nas_media"
 
 run_sync_as_service: true     # or false to use cron
-sync_time: "02:00"            # only used with systemd timers
+sync_time: "00:00"            # only used with systemd timers
 
